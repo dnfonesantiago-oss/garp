@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071a3b">
+  <style>
+    :root{--navy:#071a3b;--blue:#087cff;--cyan:#00d5ff;--green:#00c7a6;--bg:#030d22;--panel:#071d40;--panel2:#0a2854;--ink:#edf6ff;--muted:#a9c4e8;--line:#174477;--danger:#ef4444}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;padding-bottom:24px;background:radial-gradient(ellipse at 75% 0%,#0b2c69 0%,#061631 42%,#02091a 100%);color:var(--ink);font-family:Arial,sans-serif}
+    header{margin-left:238px;padding:20px 28px;background:linear-gradient(110deg,#061735,#092c62 70%,#11105a);border-bottom:1px solid var(--blue);box-shadow:0 8px 28px #007bff22}
+    .header-line{display:flex;justify-content:space-between;align-items:center;gap:12px}header h1{margin:0 0 5px;font-size:20px;letter-spacing:.8px}header p{margin:0;color:#b9d8ff;font-size:13px}.theme-toggle{background:transparent;color:#fff;border:1px solid #ffffff70;border-radius:12px;white-space:nowrap}
+    main{max-width:none;margin:24px 28px 24px 266px;padding:0 0 32px}.offline-notice{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;padding:11px 14px;border:1px solid #1264b4;border-radius:12px;background:#082650;color:#dceeff;font-size:13px}.offline-notice button{padding:8px 12px;background:#0758bc;color:white;white-space:nowrap}.offline-notice.offline{border-color:#ca8a04;background:#3b2b08;color:#fde68a}.offline-notice.pending{border-color:#0e7490;background:#063545;color:#a5f3fc}
+    .card,.product-report{background:linear-gradient(145deg,#071d40f2,#06152ff2);border:1px solid #15549a;border-radius:18px;color:var(--ink);box-shadow:0 8px 24px #00102d77;padding:17px;margin:0 0 14px}
+    h2{margin:0 0 12px;font-size:18px;color:#f2f8ff}.page-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.page-title h2{margin:0}.hint,.meta{color:var(--muted);font-size:13px;line-height:1.55}.hint{margin:8px 0 0}.status{margin-top:10px;font-size:13px;line-height:1.5;overflow-wrap:anywhere}.ok{color:#34d399}.err{color:#fca5a5}.hidden{display:none!important}
+    input,select{width:100%;min-height:44px;padding:11px 12px;border:1px solid #1c5794;border-radius:10px;background:#061a38;color:#f3f8ff;font-size:15px}input::placeholder{color:#7898bd}label{display:block;margin:11px 0 6px;font-size:13px;font-weight:700}
+    button{border:1px solid transparent;border-radius:10px;padding:11px 14px;font-size:14px;font-weight:700;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}button:disabled{opacity:.55;cursor:wait}.primary,.appbtn,.sms{background:linear-gradient(100deg,#00b8f4,#075bea);color:#fff;box-shadow:0 0 14px #007bff33}.primary{width:100%;margin-top:14px}.secondary,.back-btn,.tabs button,.recent-filters button{background:#0b2850;color:#dceeff;border:1px solid #1b5795}.back-btn{white-space:nowrap}
+    .summary-banner{display:flex;justify-content:space-between;align-items:center;gap:18px;margin:4px 0 16px;padding:22px 26px;border:1px solid #00c8ff;border-radius:20px;background:linear-gradient(112deg,#00a9f4,#0648bc 44%,#1417a9 78%,#6816b7);box-shadow:0 0 22px #008dff44}.summary-banner>div{display:flex;flex-direction:column;gap:6px}.summary-label{font-size:13px;font-weight:700;color:#e1f5ff}.summary-banner strong{font-size:32px;color:white}.summary-count{text-align:right}
+    .dashboard{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:16px}.dash-tile{min-height:130px;padding:17px;background:linear-gradient(145deg,#0a2854,#06152f);border:1px solid #1264b4;border-radius:18px;color:#f5faff;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:9px;text-align:left}.dash-tile:nth-child(1){border-color:#d58b11}.dash-tile:nth-child(2){border-color:#7139ef}.dash-tile:nth-child(3){border-color:#00bfa5}.dash-tile:nth-child(4){border-color:#3c54ff}.dash-tile:hover{transform:translateY(-2px);box-shadow:0 0 18px #008cff44}.dash-tile .tile-icon{font-size:26px}.dash-tile strong{font-size:17px}.dash-tile span:last-child{font-size:12px;color:#c1d8f5;font-weight:400;line-height:1.4}.brand-chip{display:inline-flex;align-items:center;justify-content:center;min-width:46px;height:32px;padding:0 8px;border-radius:9px;background:#0b65aa;color:white;font-weight:900;font-size:12px}.brand-amax{background:linear-gradient(135deg,#f59e0b,#d97706)}.brand-globe{background:linear-gradient(135deg,#0ea5e9,#075985)}.brand-tm{background:linear-gradient(135deg,#fb7185,#dc2626)}.brand-gomo{background:linear-gradient(135deg,#a3e635,#4d7c0f)}.brand-gcash{background:linear-gradient(135deg,#0ea5e9,#0756bd)}.brand-sim{background:linear-gradient(135deg,#475569,#1e293b)}
+    .top-shortcuts{position:relative;margin-bottom:15px}.home-tools{display:flex;justify-content:flex-end;margin:0 2px 6px}.menu-wrap{position:relative}.menu-dots{background:#08234a;color:#dff5ff;border:1px solid #1761a8;font-size:24px;min-width:44px;padding:5px 12px}.menu-panel{position:absolute;right:0;top:42px;z-index:20;min-width:220px;padding:7px;border:1px solid #1a5ca0;border-radius:11px;background:#071b39;box-shadow:0 8px 24px #0006}.menu-panel a{display:block;padding:11px;border-radius:8px;text-decoration:none;color:#e5f2ff;font-size:13px}.menu-panel a:hover{background:#10396b}
+    .tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.tabs button.active,.recent-filters button.active{background:linear-gradient(100deg,#00b8f4,#075bea);color:white;border-color:#00cfff}.recent-filters button{border-radius:22px;padding:8px 14px}.recent-card h2{font-size:20px}.refresh-indicator{text-align:center;color:var(--muted);font-size:12px}.tx{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #123761;font-size:14px;line-height:1.5}.tx:last-child{border-bottom:0}.tx-title{font-weight:800;color:#f3f8ff}.amount,.report-value{color:var(--cyan);font-weight:800;white-space:nowrap}.pill{display:inline-block;margin-top:4px;padding:3px 8px;border-radius:20px;background:#12345d;font-size:11px}.status-badge{display:inline-flex;align-items:center;border-radius:20px;padding:4px 8px;margin:3px 2px 0;font-size:11px;font-weight:800}.status-completed{background:#123d2a;color:#86efac}.status-pending{background:#49370c;color:#fde68a}.status-credit{background:#172f55;color:#bfdbfe}.status-gcash{background:#164e63;color:#a5f3fc}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.report-products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}.product-report{padding:12px;margin:0}.product-report .report-label{font-weight:700;color:#b8d8ff;font-size:12px}.product-report .report-value{font-size:21px;margin-top:7px}.report-label{font-weight:700}.report-box{padding:13px;border:1px solid #1459a0;border-radius:11px;background:#082650}.break-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #123761;font-size:14px}.break-row:last-child{border:0}.customer-link{background:transparent;color:#4edcff;padding:0;margin:0;text-decoration:underline;text-align:left;font:inherit;font-weight:800;min-height:0}.status-select{width:144px;min-height:36px;margin-top:7px;padding:6px;font-size:12px}
+    .sale-types,.quick-type-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.sale-type-btn,.quick-type-row button{min-height:68px;background:#0a2850;color:#eaf5ff;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}.sale-type-btn.active,.quick-type-row button.active{background:#0a3e83;border-color:#00cfff;color:#fff}.selected{padding:12px;border:1px solid #087cff;border-radius:10px;background:#092b56;color:#edf6ff;line-height:1.55}.result{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px;padding:11px;border:1px solid #174477;border-radius:10px;background:#071d3c}.result button{background:#0758bc;color:#fff;padding:9px 11px}.quick-results{max-height:170px;overflow:auto}.sms-preview{margin-top:10px;padding:12px;border:1px solid #087d9c;border-radius:9px;background:#062c38;color:#b8f7ff;font-family:monospace;white-space:pre-line;overflow-wrap:anywhere}.sms{width:100%;margin-top:10px}.inventory-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}.inventory-table th,.inventory-table td{padding:9px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}.inventory-table th:first-child,.inventory-table td:first-child{text-align:left;font-weight:700}.inventory-table th{background:#0b2850;color:#dceeff}.inventory-ending{font-weight:800;color:#34d399}
+    .modal-backdrop{position:fixed;inset:0;z-index:100;background:#071221bb;display:flex;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(4px)}.quick-modal{width:min(560px,100%);max-height:88vh;overflow:auto;padding:19px;border:1px solid #1676c9;border-radius:18px;background:#071b39;color:#eff7ff;box-shadow:0 22px 70px #0008}.quick-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.quick-modal-head h2{margin:0}.modal-close{width:40px;height:40px;padding:0;border-radius:50%;background:#12345d;color:#fff;font-size:22px}.payment-options{display:grid;gap:8px}.toast-host{position:fixed;z-index:130;top:14px;right:14px;display:flex;flex-direction:column;gap:8px;max-width:min(390px,calc(100vw - 28px));pointer-events:none}.toast{padding:12px 15px;border-radius:12px;background:#123c2a;color:#fff;box-shadow:0 8px 26px #0004;font-size:13px;font-weight:700}.toast.error{background:#991b1b}.toast.info{background:#173b75}.fab-add{position:fixed;right:22px;bottom:22px;z-index:65;width:56px;height:56px;padding:0;border-radius:50%;background:linear-gradient(135deg,#00cfff,#075bea);color:white;font-size:32px;font-weight:400;box-shadow:0 0 22px #008cff88}.back-to-top{position:fixed;right:18px;bottom:88px;z-index:60;width:44px;height:44px;border-radius:50%;background:#12345d;color:white}
+    .app-nav{position:fixed;z-index:70;left:0;top:0;bottom:0;width:238px;display:flex;flex-direction:column;gap:7px;padding:25px 13px;background:linear-gradient(180deg,#04132f,#061f50 70%,#03142e);border-right:1px solid #087cff;box-shadow:8px 0 32px #00102d99}.app-nav:before{content:'▥  GLOBE AMAX\A RETAILER PORTAL';white-space:pre;display:block;padding:4px 14px 22px;color:#f4f9ff;font-size:20px;line-height:1.4;font-weight:900;letter-spacing:.4px}.nav-item{width:100%;min-height:54px;display:flex;align-items:center;gap:13px;padding:9px 14px;background:transparent;color:#c5dcff;border:1px solid transparent;border-radius:12px;text-align:left}.nav-item .nav-icon{font-size:22px;width:25px;text-align:center}.nav-item.active{background:linear-gradient(100deg,#00b7f4,#064cbe);color:#fff;border-color:#00d5ff;box-shadow:0 0 17px #008cff55}.footer{display:none}
+    body.light{--ink:#172033;--muted:#64748b;--line:#dce3eb;background:#f3f6fa;color:#172033}body.light header{background:#142b46}body.light main{color:#172033}body.light .card,body.light .product-report,body.light .quick-modal{background:#fff;color:#172033;border-color:#dbe5f0}body.light h2,body.light .tx-title{color:#172033}body.light .meta,body.light .hint{color:#64748b}body.light input,body.light select{background:#fff;color:#172033;border-color:#cbd5e1}body.light .dash-tile{background:#fff;color:#172033;border-color:#cbd5e1}body.light .dash-tile span:last-child{color:#64748b}body.light .result{background:#fff;color:#172033}body.light .menu-panel{background:#fff}body.light .menu-panel a{color:#142b46}body.light .selected{background:#eff6ff;color:#172033}body.light .tx,body.light .break-row{border-color:#e2e8f0}body.light .amount,body.light .report-value{color:#075985}body.light .modal-close{background:#eef2f7;color:#24364b}
+    @media(max-width:900px){.report-products{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:640px){body{padding-bottom:84px}header{margin:0;padding:14px 14px;border-radius:0 0 16px 16px}header h1{font-size:17px}header p{font-size:11px}.header-line{align-items:flex-start}main{margin:14px 12px 20px;padding-bottom:88px}.offline-notice{font-size:11px;padding:9px 10px}.summary-banner{padding:16px 14px;border-radius:16px}.summary-banner strong{font-size:23px}.summary-label{font-size:10px}.dashboard{gap:8px}.dash-tile{min-height:100px;padding:11px 10px;gap:6px;border-radius:14px}.dash-tile .tile-icon{font-size:21px}.dash-tile strong{font-size:14px}.dash-tile span:last-child{font-size:11px}.card{padding:15px;border-radius:16px}h2{font-size:17px}.grid{gap:8px}.report-products{grid-template-columns:1fr 1fr}.product-report .report-value{font-size:18px}.tx{font-size:13px}.tx .meta{font-size:11px}.status-select{width:122px;font-size:11px}.fab-add{right:15px;bottom:90px;width:52px;height:52px}.app-nav{left:0;right:0;top:auto;bottom:0;width:auto;height:76px;display:grid;grid-template-columns:repeat(5,1fr);flex-direction:row;gap:2px;padding:6px 4px max(6px,env(safe-area-inset-bottom));border-right:0;border-top:1px solid #087cff;box-shadow:0 -6px 24px #00102d99}.app-nav:before{display:none}.nav-item{min-height:58px;flex-direction:column;justify-content:center;gap:3px;padding:4px 2px;border-radius:9px}.nav-item .nav-icon{font-size:20px;width:auto}.nav-item span:last-child{font-size:10px}.quick-modal{padding:15px}.theme-toggle{font-size:10px;padding:8px}.back-to-top{right:14px;bottom:90px}}
+  </style>
+</head>
+<body class="dark">
+<header><div class="header-line"><div><h1>SALES & LOAD PORTAL</h1><p>Customer search • Load • SIM cards • GCash • Transaction history &amp; reports</p></div><button type="button" class="theme-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">🌙 Dark Mode</button></div></header>
+<main>
+  <div id="offlineNotice" class="offline-notice" role="status" aria-live="polite"><span id="offlineMessage">Preparing secure offline cache…</span><button type="button" onclick="syncNow()" id="offlineSyncButton">SYNC NOW</button></div>
+  <section class="summary-banner" aria-label="Today's sales summary">
+    <div><span class="summary-label">TOTAL SALES TODAY</span><strong id="todaySales">₱0.00</strong></div>
+    <div class="summary-count"><span class="summary-label">TRANSACTIONS TODAY</span><strong id="todayTransactions">0</strong></div>
+  </section>
+  <section class="top-shortcuts" aria-label="Quick navigation">
+    <div class="dashboard">
+      <button class="dash-tile" onclick="navigateTo('autoload')"><span class="tile-icon brand-chip brand-amax">A</span><strong>Autoload</strong><span>New Amax transaction</span></button>
+      <button class="dash-tile" onclick="navigateTo('sim')"><span class="tile-icon brand-chip brand-sim">SIM</span><strong>SIM Sales</strong><span>Globe, TM, RT, GOMO</span></button>
+      <button class="dash-tile" onclick="navigateTo('gcash')"><span class="tile-icon brand-chip brand-gcash">G</span><strong>GCash</strong><span>Cash-in / cash-out</span></button>
+      <button class="dash-tile" onclick="navigateTo('reports')"><span class="tile-icon">▤</span><strong>Sales Reports</strong><span>Daily summary &amp; records</span></button>
+    </div>
+    <div class="home-tools">
+      <div class="menu-wrap">
+        <div id="databaseMenu" class="menu-panel hidden">
+          <a id="dbLink" href="#" target="_blank" rel="noopener" onclick="databaseShortcutClicked()">📊 Open Google Sheets Database</a>
+          <a href="#breakdownCard" onclick="closeDatabaseMenu()">Transaction Breakdown Report</a>
+        </div>
+        <button class="menu-dots" type="button" aria-label="Open database and more options" title="Database and more options" onclick="toggleDatabaseMenu()">⋮</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="homePage">
+    <section class="card recent-card">
+      <h2>Recent Transactions</h2><div id="refreshIndicator" class="refresh-indicator" aria-live="polite"></div>
+      <div class="tabs recent-filters" aria-label="Filter recent transactions">
+        <button class="active" type="button" data-recent-filter="All" onclick="filterRecent('All')">All</button>
+        <button type="button" data-recent-filter="GCash" onclick="filterRecent('GCash')">GCash</button>
+        <button type="button" data-recent-filter="Amax" onclick="filterRecent('Amax')">AMAX</button>
+        <button type="button" data-recent-filter="Sim Card" onclick="filterRecent('Sim Card')">SIM Card</button>
+      </div>
+      <div id="homeRecent" class="meta">Loading transactions...</div>
+    </section>
+  </section>
+
+  <section id="salesPage" class="hidden">
+  <div class="page-title"><h2 id="salesPageTitle">New Transaction</h2><button class="back-btn" onclick="navigateTo('home')">← Home</button></div>
+  <section class="card">
+    <h2>Search Customer</h2>
+    <input id="search" type="search" placeholder="Search name, barangay, or mobile number" autocomplete="off">
+    <p class="hint">Mag-type ng hindi bababa sa 2 characters.</p><div id="searchStatus" class="status"></div><div id="results"></div>
+  </section>
+
+  <section id="sellCard" class="card hidden">
+    <h2>2. New Sale</h2><div id="selected" class="selected"></div>
+    <div class="sale-types" role="group" aria-label="Choose transaction type">
+      <button type="button" class="sale-type-btn active" data-sale-type="Amax" onclick="chooseSaleType('Amax')"><span class="brand-chip">AMAX</span>Amax</button>
+      <button type="button" class="sale-type-btn" data-sale-type="Simcard" onclick="chooseSaleType('Simcard')"><span class="brand-chip">SIM</span>SIM Card</button>
+      <button type="button" class="sale-type-btn" data-sale-type="GCash" onclick="chooseSaleType('GCash')"><span class="brand-chip" style="background:#e5f3ff;color:#0077c8">GCash</span>GCash</button>
+    </div>
+    <div id="loadFields"><label for="loadAmount">Amax amount (₱)</label><input id="loadAmount" type="number" min="0.01" max="100000" step="0.01" placeholder="e.g. 100"></div>
+    <div id="simFields" class="hidden">
+      <label>SIM brand</label>
+      <div class="sim-radio" id="simBrandOptions">
+        <label><input type="radio" name="simBrand" value="Globe" checked><span class="brand-chip brand-globe">G</span> Globe</label>
+        <label><input type="radio" name="simBrand" value="TM"><span class="brand-chip brand-tm">TM</span> TM</label>
+        <label><input type="radio" name="simBrand" value="GOMO"><span class="brand-chip brand-gomo">G</span> GOMO</label>
+        <label><input type="radio" name="simBrand" value="RT SIM"> RT SIM</label>
+      </div>
+      <div class="grid"><div><label for="simPrice">Unit price (₱)</label><input id="simPrice" type="number" min="0.01" max="100000" step="0.01" placeholder="e.g. 50"></div>
+      <div><label for="simQty">Quantity</label><input id="simQty" type="number" min="1" step="1" value="1"></div></div>
+      <p class="hint">Ilagay ang presyo bawat SIM at ilang piraso ang ibebenta. Automatic ang total.</p>
+    </div>
+    <div id="gcashFields" class="hidden"><label for="gcashAmount">GCash amount (₱)</label><input id="gcashAmount" type="number" min="0.01" max="100000" step="0.01" placeholder="e.g. 500"></div>
+    <div id="salePreview" class="selected" style="margin-top:12px">Total: ₱0.00</div>
+    <p class="hint">Pipiliin ang payment status pagkatapos pindutin ang Save Transaction.</p>
+    <button id="submitBtn" class="primary" onclick="submitSale()">SAVE TRANSACTION</button>
+    <button class="secondary" style="width:100%;margin-top:8px" onclick="clearSelection()">Cancel / Choose another customer</button>
+    <div id="saveStatus" class="status"></div>
+    <div id="smsArea" class="hidden"><div class="hint"><strong>Load transaction saved.</strong> Maaari mong buksan ang SMS app.</div><div id="smsPreview" class="sms-preview"></div><button class="sms" onclick="openSmsApp()">OPEN SMS APP — SEND TO 2189</button><p class="hint">Ikaw ang pipindot ng Send. Para lamang ito sa Load transaction.</p></div>
+    <button id="newSaleBtn" class="secondary hidden" style="width:100%;margin-top:10px" onclick="resetSaleForm()">NEW SALE FOR SAME CUSTOMER</button>
+  </section>
+
+  <section id="simInventoryCard" class="card">
+    <h2>SIM Card Inventory</h2>
+    <p class="hint">Automatic ang SIM Sold at Ending Stock kapag may successful SIM transaction.</p>
+    <div id="simInventoryStatus" class="status">Loading inventory...</div>
+    <div id="simInventoryTable"></div>
+    <div class="grid" style="margin-top:14px">
+      <div><label for="inventoryBrand">SIM Brand</label><select id="inventoryBrand"><option>Globe</option><option>TM</option><option>GOMO</option><option>RT SIM</option></select></div>
+      <div><label for="beginningQty">Beginning Inventory</label><input id="beginningQty" type="number" min="0" step="1" placeholder="Initial stock"></div>
+    </div>
+    <button class="secondary" style="width:100%;margin-top:9px" onclick="saveBeginningInventory()">SAVE BEGINNING INVENTORY</button>
+    <div class="grid" style="margin-top:12px">
+      <div><label for="stockInQty">New Stock In</label><input id="stockInQty" type="number" min="1" step="1" placeholder="Quantity received"></div>
+      <div style="display:flex;align-items:end"><button class="primary" style="margin:0" onclick="recordSimStockIn()">ADD STOCK IN</button></div>
+    </div>
+    <p class="hint">Beginning Inventory: itakda ang panimulang bilang. Stock In: gamitin lamang sa bagong dating na SIM para maidagdag sa kasalukuyang stock.</p>
+  </section>
+  </section>
+
+  <section id="reportsPage" class="hidden">
+  <div class="page-title"><h2>Sales Reports</h2><button class="back-btn" onclick="navigateTo('home')">← Home</button></div>
+  <section class="card">
+    <h2>Sales Summary</h2>
+    <div class="tabs" aria-label="Report period"><button class="active" data-period="day" onclick="loadReport('day')">Today</button><button data-period="week" onclick="loadReport('week')">This Week</button><button data-period="month" onclick="loadReport('month')">This Month</button></div>
+    <div class="date-report-picker" style="display:flex;align-items:end;gap:10px;flex-wrap:wrap;margin:14px 0"><div style="flex:1;min-width:180px"><label for="reportDate">Select Report Date</label><input id="reportDate" type="date" /></div><button class="primary" style="margin:0" onclick="loadSelectedDateReport()">View Date</button></div>
+    <p id="periodLabel" class="hint">Today's report</p>
+    <div class="report-products">
+      <div class="product-report"><div><div class="report-label">Credit / Pending Left</div><div class="meta" id="outstandingCount">0 transactions</div></div><div class="report-value" id="outstandingAmount">₱0.00</div></div>
+      <div class="product-report"><div><div class="report-label">Amax Summary</div><div class="meta" id="amaxCount">0 transactions</div></div><div id="amaxAmount" class="report-value">₱0.00</div></div>
+      <div class="product-report"><div><div class="report-label">SIM Card Summary</div><div class="meta" id="simCount">0 transactions</div></div><div id="simAmount" class="report-value">₱0.00</div></div>
+      <div class="product-report"><div><div class="report-label">GCash Summary</div><div class="meta" id="gcashCount">0 transactions</div></div><div id="gcashAmountReport" class="report-value">₱0.00</div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:18px"><h2 style="margin:0">Transaction History</h2><button class="secondary" onclick="loadReport(currentPeriod)">Refresh</button></div>
+    <p class="hint">Pinakabagong transactions muna. Pindutin ang pangalan para makita ang detalye. I-filter ang Credit o Pending kung kailangan.</p>
+    <div class="grid" style="margin:10px 0">
+      <div><label for="transactionHistorySearch">Search Transaction History</label><input id="transactionHistorySearch" type="search" placeholder="Search customer, number, or item..." autocomplete="off"></div>
+      <div><label for="transactionStatusFilter">Filter Payment Status</label><select id="transactionStatusFilter"><option value="All">All statuses</option><option value="Credit">Credit</option><option value="Pending">Pending</option></select></div>
+    </div>
+    <div id="transactions" class="meta" style="margin-top:8px">Loading...</div>
+  </section>
+
+  <section class="card" id="breakdownCard">
+    <h2>Transaction Breakdown</h2>
+    <p class="hint">Hiwalay na report ng sales quantity, bilang ng transactions, at total sales bawat item.</p>
+    <div id="breakdownPeriod" class="hint" style="margin:8px 0 12px">Today's breakdown</div>
+    <div id="breakdown" class="meta">Loading...</div>
+  </section>
+
+  </section>
+</main>
+<button type="button" class="fab-add" aria-label="Quick add transaction" title="Quick Add Transaction" onclick="openQuickAdd()">+</button>
+<nav class="app-nav" aria-label="Main navigation">
+  <button class="nav-item active" data-page="home" onclick="navigateTo('home')"><span class="nav-icon">⌂</span><span>Home</span></button>
+  <button class="nav-item" data-page="autoload" onclick="navigateTo('autoload')"><span class="nav-icon">⚡</span><span>Autoload</span></button>
+  <button class="nav-item" data-page="sim" onclick="navigateTo('sim')"><span class="nav-icon">▣</span><span>SIM</span></button>
+  <button class="nav-item" data-page="gcash" onclick="navigateTo('gcash')"><span class="nav-icon">₱</span><span>GCash</span></button>
+  <button class="nav-item" data-page="reports" onclick="navigateTo('reports')"><span class="nav-icon">▤</span><span>Reports</span></button>
+</nav>
+
+<div id="quickAddBackdrop" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="quickAddTitle" onclick="if(event.target===this)closeQuickAdd()">
+  <section class="quick-modal">
+    <div class="quick-modal-head"><h2 id="quickAddTitle">＋ Quick Add Transaction</h2><button class="modal-close" type="button" onclick="closeQuickAdd()" aria-label="Close">×</button></div>
+    <label for="quickCustomerSearch">Search customer</label>
+    <input id="quickCustomerSearch" type="search" placeholder="Name, barangay, or mobile number" autocomplete="off">
+    <div id="quickCustomerStatus" class="hint">Mag-type ng kahit 2 characters.</div><div id="quickCustomerResults" class="quick-results"></div>
+    <div id="quickSelectedCustomer" class="selected hidden"></div>
+    <div class="quick-type-row"><button type="button" class="active" data-quick-type="Amax" onclick="chooseQuickType('Amax')">⚡ AMAX</button><button type="button" data-quick-type="Simcard" onclick="chooseQuickType('Simcard')">▣ SIM</button><button type="button" data-quick-type="GCash" onclick="chooseQuickType('GCash')">₱ GCash</button></div>
+    <div id="quickAmaxFields"><label for="quickAmaxAmount">Amax amount (₱)</label><input id="quickAmaxAmount" type="number" min="0.01" step="0.01" placeholder="e.g. 100"></div>
+    <div id="quickSimFields" class="hidden"><label for="quickSimBrand">SIM brand</label><select id="quickSimBrand"><option>Globe</option><option>TM</option><option>GOMO</option><option>RT SIM</option></select><div class="grid"><div><label for="quickSimPrice">Unit price (₱)</label><input id="quickSimPrice" type="number" min="0.01" step="0.01"></div><div><label for="quickSimQty">Quantity</label><input id="quickSimQty" type="number" min="1" step="1" value="1"></div></div></div>
+    <div id="quickGcashFields" class="hidden"><label for="quickGcashAmount">GCash amount (₱)</label><input id="quickGcashAmount" type="number" min="0.01" step="0.01" placeholder="e.g. 500"><p class="hint">May 1% service fee, katulad ng regular GCash form.</p></div>
+    <p class="hint">Pipiliin ang payment status pagkatapos pindutin ang Save Transaction.</p>
+    <div id="quickTotal" class="selected">Total: ₱0.00</div>
+    <div id="quickSmsArea" class="hidden"><p class="hint"><strong>Amax transaction saved.</strong> You can open your SMS app with the prepared LoadRT message.</p><div id="quickSmsPreview" class="sms-preview"></div><button type="button" class="sms" style="width:100%" onclick="openQuickSmsApp()">OPEN SMS APP — SEND TO 2189</button><p class="hint">Ikaw ang pipindot ng Send. Para ito sa Amax/Load transaction.</p></div>
+    <button id="quickSaveBtn" class="primary" type="button" onclick="saveQuickSale()">SAVE TRANSACTION</button>
+    <button class="secondary" type="button" style="width:100%;margin-top:8px" onclick="closeQuickAdd()">CANCEL</button>
+  </section>
+</div>
+<div id="paymentStatusBackdrop" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="paymentStatusTitle">
+  <section class="quick-modal">
+    <div class="quick-modal-head"><h2 id="paymentStatusTitle">Select Payment Status</h2><button class="modal-close" type="button" onclick="closePaymentStatusModal()" aria-label="Close">×</button></div>
+    <p class="hint">Piliin ang status para sa transaction na ise-save.</p>
+    <div class="payment-options" style="display:grid;grid-template-columns:1fr">
+      <button type="button" class="secondary" onclick="confirmPaymentStatus('Cash')">Cash</button>
+      <button type="button" class="secondary" onclick="confirmPaymentStatus('Credit')">Credit</button>
+      <button type="button" class="secondary" onclick="confirmPaymentStatus('Gcash Payment')">Gcash Payment</button>
+      <button type="button" class="secondary" onclick="confirmPaymentStatus('Pending')">Pending</button>
+    </div>
+    <button class="secondary" style="width:100%;margin-top:8px" onclick="closePaymentStatusModal()">CANCEL</button>
+  </section>
+</div>
+<div id="customerDetailsBackdrop" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="customerDetailsTitle" onclick="if(event.target===this)closeCustomerDetails()">
+  <section class="quick-modal">
+    <div class="quick-modal-head"><h2 id="customerDetailsTitle">Customer Transactions</h2><button class="modal-close" type="button" onclick="closeCustomerDetails()" aria-label="Close">×</button></div>
+    <div id="customerDetailsSummary" class="hint"></div>
+    <div id="customerDetailsContent">Loading customer transactions...</div>
+    <button type="button" class="secondary" style="width:100%;margin-top:12px" onclick="closeCustomerDetails()">CLOSE</button>
+  </section>
+</div>
+<div id="toastHost" class="toast-host" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+let chosen=null, searchTimer=null, pendingSmsBody='', currentPeriod='day', selectedReportDate='', selectedSaleType='Amax', activePage='home', recentTransactions=[], recentFilter='All', currentReportTransactions=[], activeCustomerDetails=null, transactionHistoryFilter='All', quickPendingSmsBody='';
+const SMS_RECIPIENT='2189';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const peso=n=>'₱'+Number(n||0).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const OFFLINE_DB_NAME='GlobeAmaxPortalOffline';
+let offlineState={customers:[],transactions:[],inventory:[],queue:[]};
+let offlineDb=null, offlineSyncing=false;
+function newRequestId(){return (window.crypto&&crypto.randomUUID)?crypto.randomUUID():('r'+Date.now().toString(36)+Math.random().toString(36).slice(2,10));}
+function openOfflineDb(){return new Promise((resolve,reject)=>{if(!('indexedDB'in window)){resolve(null);return;}const req=indexedDB.open(OFFLINE_DB_NAME,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('state'))req.result.createObjectStore('state');};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
+async function loadOfflineState(){try{offlineDb=await openOfflineDb();if(offlineDb){const value=await new Promise((resolve,reject)=>{const req=offlineDb.transaction('state','readonly').objectStore('state').get('snapshot');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});if(value)offlineState=Object.assign(offlineState,value);}else{const value=localStorage.getItem('globeAmaxOfflineV2');if(value)offlineState=Object.assign(offlineState,JSON.parse(value));}}catch(e){console.warn('Offline cache unavailable',e);}updateOfflineNotice();}
+async function persistOfflineState(){try{if(offlineDb){await new Promise((resolve,reject)=>{const tx=offlineDb.transaction('state','readwrite');tx.objectStore('state').put(offlineState,'snapshot');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}else{localStorage.setItem('globeAmaxOfflineV2',JSON.stringify(offlineState));}}catch(e){showToast('Hindi ma-save ang offline cache sa device.','error');}}
+function updateOfflineNotice(){const box=$('offlineNotice'),msg=$('offlineMessage'),btn=$('offlineSyncButton');if(!box)return;const pending=(offlineState.queue||[]).length;box.classList.toggle('offline',!navigator.onLine);box.classList.toggle('pending',pending>0);msg.textContent=!navigator.onLine?('OFFLINE MODE • '+(offlineState.customers.length||0)+' cached customers • '+pending+' queued change(s)'):pending?('ONLINE • '+pending+' change(s) waiting to sync'):('ONLINE • Offline cache ready • Changes sync automatically');btn.disabled=!navigator.onLine||pending===0;btn.textContent=offlineSyncing?'SYNCING…':(pending?'SYNC '+pending:'SYNCED');}
+function manilaNow(){return new Date().toLocaleString('sv-SE',{timeZone:'Asia/Manila',hour12:false}).replace('T',' ');}
+function keyFromDate(value){return String(value||'').slice(0,10);}
+function dateMillis(value){const s=String(value||'').replace(' ','T');return Date.parse(s.length===19?s+'+08:00':s)||0;}
+function statusColorClass(status){return status==='Pending'?'status-pending':status==='Credit'?'status-credit':status==='Gcash Payment'?'status-gcash':'status-completed';}
+function upsertLocalTransaction(tx){const list=offlineState.transactions||[];const i=list.findIndex(x=>x.id===tx.id);if(i>=0)list[i]=tx;else list.unshift(tx);offlineState.transactions=list;}
+function getLocalInventory(){const base=offlineState.inventory||[];return ['Globe','TM','GOMO','RT SIM'].map(brand=>{const x=base.find(y=>y.brand===brand)||{beginning:0,stockIn:0,sold:0};const pendingSold=(offlineState.transactions||[]).filter(t=>t.pendingSync&&t.type==='Sim Card'&&t.item===brand).reduce((n,t)=>n+(Number(t.quantity)||0),0);const sold=(Number(x.sold)||0)+pendingSold;return {brand,beginning:Number(x.beginning)||0,stockIn:Number(x.stockIn)||0,sold,ending:(Number(x.beginning)||0)+(Number(x.stockIn)||0)-sold};});}
+function localReport(period,selectedDate){const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Manila',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());let start=today,end=today;if(period==='date'){start=end=selectedDate||today;}else if(period==='week'||period==='month'){const p=today.split('-').map(Number);const d=new Date(Date.UTC(p[0],p[1]-1,p[2]));if(period==='week'){d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7));}else{d.setUTCDate(1);}start=d.toISOString().slice(0,10);}const rows=(offlineState.transactions||[]).filter(t=>{const k=t.reportDateKey||keyFromDate(t.date);return k>=start&&k<=end;}).sort((a,b)=>dateMillis(b.date)-dateMillis(a.date));const sums={Amax:{count:0,amount:0},'Sim Card':{count:0,amount:0},GCash:{count:0,amount:0}},breakdown={};rows.forEach(t=>{const c=sums[t.type]||(sums[t.type]={count:0,amount:0});c.count++;c.amount+=Number(t.amount)||0;const k=[t.type,t.item].filter(Boolean).join(' • ');if(!breakdown[k])breakdown[k]={label:k,quantity:0,transactions:0,totalSales:0};breakdown[k].quantity+=Number(t.quantity)||0;breakdown[k].transactions++;breakdown[k].totalSales+=Number(t.amount)||0;});const pending=rows.filter(t=>['Credit','Pending'].includes(t.paymentStatus));Object.keys(sums).forEach(k=>sums[k].amount=Math.round(sums[k].amount*100)/100);return {period,summaries:sums,startDate:start,endDate:end,totalCount:rows.length,totalAmount:rows.reduce((n,t)=>n+(Number(t.amount)||0),0),outstandingCount:pending.length,outstandingAmount:pending.reduce((n,t)=>n+(Number(t.amount)||0),0),items:Object.values(breakdown),transactions:rows};}
+function localRead(method,args){if(method==='searchCustomers'){const q=String(args[0]||'').trim().toLowerCase();return (offlineState.customers||[]).filter(c=>[c.customerId,c.owner,c.barangay,c.number,c.customerType].join(' ').toLowerCase().includes(q)).slice(0,40);}if(method==='getPeriodReport')return localReport(args[0]);if(method==='getReportForDate')return localReport('date',args[0]);if(method==='getSimInventorySummary')return {success:true,items:getLocalInventory()};if(method==='getRecentTransactions')return (offlineState.transactions||[]).slice().sort((a,b)=>dateMillis(b.date)-dateMillis(a.date)).slice(0,15).map(t=>Object.assign({},t,{amount:peso(t.amount)}));if(method==='getCustomerTransactionHistory')return (offlineState.transactions||[]).filter(t=>t.number===args[0]&&keyFromDate(t.date)===args[1]).sort((a,b)=>dateMillis(b.date)-dateMillis(a.date));if(method==='getOfflineBootstrap')return offlineState;throw new Error('This action is not available from the offline cache.');}
+function makeLocalSale(method,args,requestId){let customer,type,item,amount,quantity=1,unitPrice,fee=0,payment;if(method==='saveTransaction'){[customer,amount,payment]=args;type='Amax';item='Amax';unitPrice=Number(amount);}else if(method==='saveGcashTransaction'){[customer,amount,payment]=args;type='GCash';item='GCash';unitPrice=Number(amount);fee=Math.round(unitPrice*.01*100)/100;}else{[customer,item,unitPrice,quantity,payment]=args;type='Sim Card';unitPrice=Number(unitPrice);quantity=Number(quantity);}const now=manilaNow(),id='LOCAL-'+requestId;const tx={id,date:now,reportDateKey:now.slice(0,10),customerId:customer.customerId,owner:customer.owner,barangay:customer.barangay,number:customer.number,type,item,priceType:'',unitPrice,quantity,paymentStatus:payment||'Cash',amount:Math.round((unitPrice*quantity+fee)*100)/100,pendingSync:true};upsertLocalTransaction(tx);return {success:true,id,date:now,reportDateKey:tx.reportDateKey,sheet:'LOCAL QUEUE',customerId:tx.customerId,owner:tx.owner,barangay:tx.barangay,number:tx.number,type,item,unitPrice,quantity,paymentStatus:tx.paymentStatus,amount:tx.amount};}
+async function addOfflineQueue(method,args,requestId,localResult){const queueArgs=args.slice();if(method==='saveTransaction'||method==='saveGcashTransaction')queueArgs.push(requestId);else if(method==='saveSimcardTransaction')queueArgs.push(requestId);else if(method==='addSimStockIn')queueArgs.push(requestId);else if(method==='updateTransactionPaymentStatus'&&String(queueArgs[0]).startsWith('LOCAL-'))queueArgs[0]='TXN-'+String(queueArgs[0]).slice(6);offlineState.queue.push({requestId,method,args:queueArgs,localId:localResult&&localResult.id||''});await persistOfflineState();updateOfflineNotice();return localResult;}
+async function offlineWrite(method,args,success,failure,requestId){try{let result={success:true};if(['saveTransaction','saveGcashTransaction','saveSimcardTransaction'].includes(method)){result=makeLocalSale(method,args,requestId);await addOfflineQueue(method,args,requestId,result);success&&success(result);loadHomeRecent();if(currentPeriod==='date'&&selectedReportDate)loadSelectedDateReport();else loadReport(currentPeriod);if(method==='saveSimcardTransaction')loadSimInventory();return;}if(method==='setSimBeginningInventory'){const [brand,qty]=args;const items=getLocalInventory();const x=items.find(v=>v.brand===brand);if(!x||Number(qty)+x.stockIn<x.sold)throw new Error('Beginning Inventory cannot be lower than units already sold.');offlineState.inventory=items.map(v=>v.brand===brand?Object.assign({},v,{beginning:Number(qty)}):v);result={success:true,items:getLocalInventory()};}else if(method==='addSimStockIn'){const [brand,qty]=args;offlineState.inventory=getLocalInventory().map(v=>v.brand===brand?Object.assign({},v,{stockIn:v.stockIn+Number(qty)}):v);result={success:true,items:getLocalInventory()};}else if(method==='updateTransactionPaymentStatus'){const [id,status]=args;const tx=(offlineState.transactions||[]).find(v=>v.id===id);if(!tx)throw new Error('Transaction is not in the offline cache.');tx.paymentStatus=status;result={success:true,id,paymentStatus:status};}else{throw new Error('This action cannot be queued offline.');}await addOfflineQueue(method,args,requestId,result);success&&success(result);updateOfflineNotice();}catch(e){failure&&failure(e);}}
+function callServer(method,args,success,failure,isWrite){args=args||[];const write=!!isWrite;const requestId=write?newRequestId():'';const finalArgs=args.slice();if(write){if(method==='saveTransaction'||method==='saveGcashTransaction')finalArgs.push(requestId);else if(method==='saveSimcardTransaction'||method==='addSimStockIn')finalArgs.push(requestId);}if(!navigator.onLine||!window.google||!google.script||!google.script.run){if(write){offlineWrite(method,args,success,failure,requestId);}else{try{Promise.resolve(localRead(method,args)).then(result=>success&&success(result)).catch(e=>failure&&failure(e));}catch(e){failure&&failure(e);}}return;}const runner=google.script.run.withSuccessHandler(result=>{cacheServerResult(method,result,requestId).then(()=>{updateOfflineNotice();success&&success(result);});}).withFailureHandler(error=>{if(write&&!navigator.onLine){offlineWrite(method,args,success,failure,requestId);}else{failure&&failure(error);}});try{runner[method](...finalArgs);}catch(e){failure&&failure(e);}}
+async function cacheServerResult(method,result,requestId){if(method==='getOfflineBootstrap'&&result){offlineState.customers=result.customers||[];offlineState.transactions=result.transactions||[];offlineState.inventory=result.inventory||[];}else if(method==='searchCustomers'&&Array.isArray(result)){const map=new Map((offlineState.customers||[]).map(c=>[c.customerId,c]));result.forEach(c=>map.set(c.customerId,c));offlineState.customers=Array.from(map.values());}else if((method==='getPeriodReport'||method==='getReportForDate')&&result&&Array.isArray(result.transactions)){result.transactions.forEach(upsertLocalTransaction);}else if(method==='getRecentTransactions'&&Array.isArray(result)){result.forEach(upsertLocalTransaction);}else if(method==='getSimInventorySummary'&&result){offlineState.inventory=result.items||[];}else if(['saveTransaction','saveGcashTransaction','saveSimcardTransaction'].includes(method)&&result&&result.id){const localId='LOCAL-'+requestId;offlineState.transactions=(offlineState.transactions||[]).filter(t=>t.id!==localId);upsertLocalTransaction(Object.assign({},result,{pendingSync:false}));}else if(['setSimBeginningInventory','addSimStockIn'].includes(method)&&result&&result.items){offlineState.inventory=result.items;}else if(method==='updateTransactionPaymentStatus'&&result){const tx=(offlineState.transactions||[]).find(t=>t.id===result.id);if(tx)tx.paymentStatus=result.paymentStatus;}await persistOfflineState();}
+function remotePromise(item){return new Promise((resolve,reject)=>{if(!navigator.onLine||!window.google||!google.script||!google.script.run){reject(new Error('Connection lost'));return;}const runner=google.script.run.withSuccessHandler(resolve).withFailureHandler(reject);try{runner[item.method](...item.args);}catch(e){reject(e);}});}
+async function syncQueue(){if(offlineSyncing||!navigator.onLine||!offlineState.queue.length)return;offlineSyncing=true;updateOfflineNotice();try{while(offlineState.queue.length&&navigator.onLine){const item=offlineState.queue[0];const result=await remotePromise(item);offlineState.queue.shift();if(result&&result.items)offlineState.inventory=result.items;await persistOfflineState();}if(!offlineState.queue.length&&navigator.onLine){const snapshot=await remotePromise({method:'getOfflineBootstrap',args:[]});offlineState.customers=snapshot.customers||[];offlineState.transactions=snapshot.transactions||[];offlineState.inventory=snapshot.inventory||[];await persistOfflineState();showToast('Offline changes synchronized successfully.');loadReport(currentPeriod==='date'?'date':currentPeriod);loadHomeRecent();if(activePage==='sim')loadSimInventory();}}catch(e){showToast('Sync paused. Your unsent changes remain on this device. '+(e.message||''),'error');}finally{offlineSyncing=false;updateOfflineNotice();}}
+function syncNow(){if(!navigator.onLine){showToast('Connect to the internet to synchronize.','error');return;}syncQueue();}
+async function initializeOffline(){await loadOfflineState();if(navigator.onLine&&window.google&&google.script&&google.script.run){callServer('getOfflineBootstrap',[],data=>{if(data){showToast('Offline cache updated for this device.','info');}loadReport('day');loadHomeRecent();},e=>{showToast('Using saved offline data. '+(e.message||''),'info');loadReport('day');loadHomeRecent();});}else{loadReport('day');loadHomeRecent();}}
+window.addEventListener('online',()=>{updateOfflineNotice();syncQueue();});window.addEventListener('offline',updateOfflineNotice);
+
+$('dbLink').href='https://docs.google.com/spreadsheets/d/1oQZJwvQlmAHhbGMsya2wvsIXUIfbYEUP8jOhWGJFpHI/edit';
+
+$('search').addEventListener('input',()=>{
+  clearTimeout(searchTimer);const q=$('search').value.trim();$('results').innerHTML='';
+  if(q.length<2){$('searchStatus').textContent='Mag-type para maghanap.';return;}
+  $('searchStatus').textContent='Searching...';
+  searchTimer=setTimeout(()=>callServer('searchCustomers',[q],showResults,e=>setStatus('searchStatus',e.message||e,'err')),250);
+});
+function setStatus(id,msg,cls=''){ $(id).textContent=msg;$(id).className='status '+cls; }
+function showResults(list){
+  $('searchStatus').textContent=list.length?list.length+' customer(s) found.':'Walang matching customer.';
+  $('results').innerHTML=list.map((c,i)=>`<div class="result"><div><strong>${esc(c.owner)}</strong><div class="meta">${esc(c.barangay)}<br>CP: ${esc(c.number)}</div></div><button onclick="selectCustomer(${i})">SELECT</button></div>`).join('');
+  window.foundCustomers=list;
+}
+function navigateTo(page){
+  activePage=page;
+  $('homePage').classList.toggle('hidden',page!=='home');
+  $('salesPage').classList.toggle('hidden',!['autoload','sim','gcash'].includes(page));
+  $('reportsPage').classList.toggle('hidden',page!=='reports');
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+  if(['autoload','sim','gcash'].includes(page)){
+    const type=page==='autoload'?'Amax':page==='sim'?'Simcard':'GCash';
+    $('salesPageTitle').textContent=page==='autoload'?'Autoload':page==='sim'?'SIM Sales':'GCash';
+    $('simInventoryCard').classList.toggle('hidden',page!=='sim');
+    if(page==='sim') loadSimInventory();
+    chooseSaleType(type);
+    $('sellCard').classList.add('hidden');
+    $('search').value='';$('results').innerHTML='';$('searchStatus').textContent='Mag-type para maghanap.';
+    chosen=null;
+    setTimeout(()=>$('search').focus(),180);
+  }
+  if(page==='reports')loadReport(currentPeriod); if(page==='home'){loadReport('day');loadHomeRecent();}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function selectCustomer(i){
+  chosen=window.foundCustomers[i];$('selected').innerHTML='<strong>'+esc(chosen.owner)+'</strong><br>'+esc(chosen.barangay)+'<br>CP: '+esc(chosen.number);
+  $('sellCard').classList.remove('hidden');$('search').blur();resetSaleForm();$('sellCard').scrollIntoView({behavior:'smooth',block:'start'});setTimeout(focusSaleAmount,350);
+}
+function clearSelection(){chosen=null;pendingSmsBody='';$('sellCard').classList.add('hidden');$('search').value='';$('results').innerHTML='';$('searchStatus').textContent='Mag-type para maghanap.';}
+function resetSaleForm(){
+  $('loadAmount').value='';$('simPrice').value='';$('simQty').value='1';$('gcashAmount').value='';
+  $('saveStatus').textContent='';$('smsArea').classList.add('hidden');$('newSaleBtn').classList.add('hidden');$('submitBtn').disabled=false;
+  changeSaleType();updatePreview();
+}
+function chooseSaleType(type){
+  selectedSaleType=type;document.querySelectorAll('[data-sale-type]').forEach(b=>b.classList.toggle('active',b.dataset.saleType===type));
+  changeSaleType();if(chosen)setTimeout(focusSaleAmount,80);
+}
+function focusSaleAmount(){const id=selectedSaleType==='Amax'?'loadAmount':selectedSaleType==='Simcard'?'simPrice':'gcashAmount';const el=$(id);if(el&&!$('sellCard').classList.contains('hidden'))el.focus();}
+function getPaymentStatus(){const el=document.querySelector('input[name=paymentStatus]:checked');return el?el.value:'Cash';}
+function changeSaleType(){
+  const type=selectedSaleType;$('loadFields').classList.toggle('hidden',type!=='Amax');
+  $('simFields').classList.toggle('hidden',type!=='Simcard');$('gcashFields').classList.toggle('hidden',type!=='GCash');
+  $('smsArea').classList.add('hidden');updatePreview();
+}
+['loadAmount','simPrice','simQty','gcashAmount'].forEach(id=>$(id).addEventListener('input',updatePreview));
+function updatePreview(){
+  const type=selectedSaleType;let total=0;
+  if(type==='Amax')total=Number($('loadAmount').value)||0;
+  if(type==='GCash'){
+    const amount=Number($('gcashAmount').value)||0;
+    const fee=Math.round(amount*0.01*100)/100;
+    total=amount+fee;
+    $('salePreview').innerHTML='GCash Amount: <strong>'+peso(amount)+'</strong><br>1% Service Fee: <strong>'+peso(fee)+'</strong><br><span style="font-size:17px">Total Amount to Pay: <strong>'+peso(total)+'</strong></span>';
+    return;
+  }
+  if(type==='Simcard')total=(Number($('simPrice').value)||0)*(Number($('simQty').value)||0);
+  $('salePreview').textContent='Total: '+peso(total);
+}
+let paymentStatusCallback=null, chosenPaymentStatus='Cash';
+function openPaymentStatusModal(callback){paymentStatusCallback=callback;$('paymentStatusBackdrop').classList.remove('hidden');}
+function closePaymentStatusModal(){$('paymentStatusBackdrop').classList.add('hidden');paymentStatusCallback=null;}
+function confirmPaymentStatus(status){chosenPaymentStatus=status;$('paymentStatusBackdrop').classList.add('hidden');const cb=paymentStatusCallback;paymentStatusCallback=null;if(cb)cb();}
+function submitSale(){if(!chosen)return;$('paymentStatusTitle').textContent='Select Payment Status';openPaymentStatusModal(performSubmitSale);}
+function performSubmitSale(){
+  if(!chosen)return;const type=selectedSaleType;let request;
+  if(type==='Amax'){
+    const amount=Number($('loadAmount').value);if(!validPositive(amount)){setStatus('saveStatus','Maglagay ng valid na Amax amount.','err');return;}
+    request=done=>callServer('saveTransaction',[chosen,amount,chosenPaymentStatus],done,fail,true);
+  }else if(type==='GCash'){
+    const amount=Number($('gcashAmount').value);if(!validPositive(amount)){setStatus('saveStatus','Maglagay ng valid na GCash amount.','err');return;}
+    request=done=>callServer('saveGcashTransaction',[chosen,amount,chosenPaymentStatus],done,fail,true);
+  }else{
+    const brand=document.querySelector('input[name=simBrand]:checked').value,price=Number($('simPrice').value),qty=Number($('simQty').value);
+    if(!validPositive(price)||!Number.isInteger(qty)||qty<1||qty>100000){setStatus('saveStatus','Ilagay ang valid na unit price at whole-number quantity.','err');return;}
+    request=done=>callServer('saveSimcardTransaction',[chosen,brand,price,qty,chosenPaymentStatus],done,fail,true);
+  }
+  $('submitBtn').disabled=true;$('smsArea').classList.add('hidden');setStatus('saveStatus','Saving transaction...');
+  request(res=>{
+    $('submitBtn').disabled=false;setStatus('saveStatus','Saved successfully • '+res.sheet+' • '+res.id,'ok');
+    if(type==='Amax'){
+      pendingSmsBody='LoadRT/'+String(res.number).replace(/\D/g,'')+'/'+String(res.amount);
+      $('smsPreview').textContent='To: '+SMS_RECIPIENT+'\n'+pendingSmsBody;$('smsArea').classList.remove('hidden');
+    }
+    $('newSaleBtn').classList.remove('hidden');showToast('Successfully saved '+peso(type==='Simcard'?Number($('simPrice').value)*Number($('simQty').value):type==='GCash'?Number($('gcashAmount').value)*1.01:Number($('loadAmount').value))+' '+(type==='Simcard'?'SIM':type)+' transaction!');loadReport(currentPeriod);loadHomeRecent();if(type==='Simcard')loadSimInventory();
+  });
+  function fail(e){$('submitBtn').disabled=false;setStatus('saveStatus',e.message||String(e),'err');}
+}
+function validPositive(n){return Number.isFinite(n)&&n>0&&n<=100000;}
+function openSmsApp(){if(!pendingSmsBody)return;window.location.href='sms:'+SMS_RECIPIENT+'?body='+encodeURIComponent(pendingSmsBody);}
+function loadReport(period){
+  if(period==='date' && selectedReportDate){loadSelectedDateReport();return;}
+  currentPeriod=period;selectedReportDate='';document.querySelectorAll('[data-period]').forEach(b=>b.classList.toggle('active',b.dataset.period===period));
+  ['amaxCount','simCount','gcashCount'].forEach(id=>$(id).textContent='Loading...');
+  ['amaxAmount','simAmount','gcashAmountReport'].forEach(id=>$(id).textContent='—');
+  $('transactions').textContent='Loading...';$('breakdown').textContent='Loading...';
+  callServer('getPeriodReport',[period],renderReport,e=>setStatus('transactions',e.message||e,'err'));
+}
+function loadSelectedDateReport(){
+  const date=$('reportDate').value;
+  if(!date){showToast('Pumili muna ng report date.','error');return;}
+  currentPeriod='date';selectedReportDate=date;document.querySelectorAll('[data-period]').forEach(b=>b.classList.remove('active'));
+  ['amaxCount','simCount','gcashCount'].forEach(id=>$(id).textContent='Loading...');
+  ['amaxAmount','simAmount','gcashAmountReport'].forEach(id=>$(id).textContent='—');
+  $('transactions').textContent='Loading...';$('breakdown').textContent='Loading...';
+  callServer('getReportForDate',[date],renderReport,e=>setStatus('transactions',e.message||e,'err'));
+}
+
+function loadSimInventory(){
+  $('simInventoryStatus').textContent='Loading inventory...';
+  callServer('getSimInventorySummary',[],renderSimInventory,e=>setStatus('simInventoryStatus',e.message||e,'err'));
+}
+function renderSimInventory(data){
+  const items=(data&&data.items)||[];
+  $('simInventoryTable').innerHTML='<table class="inventory-table"><thead><tr><th>Brand</th><th>Beginning</th><th>Stock In</th><th>Sold</th><th>Ending</th></tr></thead><tbody>'+items.map(x=>`<tr><td>${esc(x.brand)}</td><td>${x.beginning}</td><td>${x.stockIn}</td><td>${x.sold}</td><td class="inventory-ending">${x.ending}</td></tr>`).join('')+'</tbody></table>';
+  setStatus('simInventoryStatus','Inventory updated. Ending stock is computed automatically.','ok');
+  const selected=$('inventoryBrand').value;
+  const current=items.find(x=>x.brand===selected);
+  if(current && document.activeElement!==$('beginningQty')) $('beginningQty').value=current.beginning;
+}
+function saveBeginningInventory(){
+  const brand=$('inventoryBrand').value,qty=Number($('beginningQty').value);
+  if(!Number.isInteger(qty)||qty<0){setStatus('simInventoryStatus','Beginning inventory must be a whole number, zero or more.','err');return;}
+  setStatus('simInventoryStatus','Saving beginning inventory...');
+  callServer('setSimBeginningInventory',[brand,qty],renderSimInventory,e=>setStatus('simInventoryStatus',e.message||e,'err'),true);
+}
+function recordSimStockIn(){
+  const brand=$('inventoryBrand').value,qty=Number($('stockInQty').value);
+  if(!Number.isInteger(qty)||qty<1){setStatus('simInventoryStatus','Stock In must be a whole number greater than zero.','err');return;}
+  setStatus('simInventoryStatus','Adding new stock...');
+  callServer('addSimStockIn',[brand,qty],data=>{ $('stockInQty').value='';renderSimInventory(data); },e=>setStatus('simInventoryStatus',e.message||e,'err'),true);
+}
+$('inventoryBrand').addEventListener('change',()=>loadSimInventory());
+
+function toggleDatabaseMenu(){ $('databaseMenu').classList.toggle('hidden'); }
+function closeDatabaseMenu(){ $('databaseMenu').classList.add('hidden'); }
+function databaseShortcutClicked(){
+  clearSelection();
+  closeDatabaseMenu();
+  navigateTo('home');
+}
+
+function backToTop(){window.scrollTo({top:0,behavior:'smooth'});}
+function loadHomeRecent(){
+  $('homeRecent').textContent='Loading transactions...';
+  callServer('getRecentTransactions',[],list=>{recentTransactions=Array.isArray(list)?list:[];renderHomeRecent();},e=>{$('homeRecent').textContent=e.message||String(e);});
+}
+function filterRecent(type){
+  recentFilter=type;
+  document.querySelectorAll('[data-recent-filter]').forEach(b=>b.classList.toggle('active',b.dataset.recentFilter===type));
+  renderHomeRecent();
+}
+function renderHomeRecent(){
+  const rows=recentTransactions.filter(t=>{
+    const type=String(t.type||'');
+    const matchesType=recentFilter==='All'||(recentFilter==='Amax'&&(type==='Amax'||type==='Load'))||(recentFilter==='Sim Card'&&(type==='Sim Card'||type==='Simcard'))||type===recentFilter;
+    return matchesType;
+  });
+  if(!rows.length){$('homeRecent').innerHTML='<div class="recent-empty">No matching transactions found.</div>';return;}
+  $('homeRecent').innerHTML=rows.map(t=>{const st=String(t.paymentStatus||'Cash');const cls=st==='Pending'?'status-pending':st==='Credit'?'status-credit':st==='Gcash Payment'?'status-gcash':'status-completed';return `<div class="tx"><div><div class="tx-title">${esc(t.owner)} <span class="pill">${esc(t.type)}${t.item&&t.item!==t.type?' • '+esc(t.item):''}</span><span class="status-badge ${cls}">${st}</span>${t.pendingSync?'<span class="status-badge status-gcash">Pending Sync</span>':''}</div><div class="meta">${esc(t.date)}<br>${esc(t.barangay)} • ${esc(t.number)}</div></div><div class="amount">${esc(t.amount)}</div></div>`;}).join('');
+}
+function toggleDarkMode(){
+  document.body.classList.toggle('light');
+  const dark=!document.body.classList.contains('light');
+  document.querySelectorAll('.theme-toggle').forEach(b=>b.textContent=dark?'☀️ Light Mode':'🌙 Dark Mode');
+  try{localStorage.setItem('salesPortalDarkMode',dark?'1':'0');}catch(e){}
+}
+
+let quickCustomer=null, quickType='Amax', quickSearchTimer=null, touchStartY=0, touchStartScroll=0;
+function showToast(message,type='success'){
+  const host=$('toastHost');if(!host)return;const el=document.createElement('div');el.className='toast'+(type==='error'?' error':type==='info'?' info':'');el.textContent=message;host.appendChild(el);setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(-6px)';setTimeout(()=>el.remove(),220);},3200);
+}
+function openQuickAdd(){
+  $('quickAddBackdrop').classList.remove('hidden');$('quickCustomerSearch').value='';$('quickCustomerResults').innerHTML='';$('quickCustomerStatus').textContent='Mag-type ng kahit 2 characters.';$('quickSelectedCustomer').classList.add('hidden');quickCustomer=null;chooseQuickType('Amax');
+  ['quickAmaxAmount','quickSimPrice','quickGcashAmount'].forEach(id=>$(id).value='');$('quickSimQty').value='1';$('quickSaveBtn').disabled=false;$('quickSaveBtn').textContent='SAVE TRANSACTION';$('quickSmsArea').classList.add('hidden');quickPendingSmsBody='';updateQuickTotal();setTimeout(()=>$('quickCustomerSearch').focus(),100);
+}
+function closeQuickAdd(){$('quickAddBackdrop').classList.add('hidden');}
+function openQuickSmsApp(){if(!quickPendingSmsBody)return;window.location.href='sms:'+SMS_RECIPIENT+'?body='+encodeURIComponent(quickPendingSmsBody);}
+function chooseQuickType(type){quickType=type;document.querySelectorAll('[data-quick-type]').forEach(b=>b.classList.toggle('active',b.dataset.quickType===type));$('quickAmaxFields').classList.toggle('hidden',type!=='Amax');$('quickSimFields').classList.toggle('hidden',type!=='Simcard');$('quickGcashFields').classList.toggle('hidden',type!=='GCash');updateQuickTotal();}
+function updateQuickTotal(){let total=0;if(quickType==='Amax')total=Number($('quickAmaxAmount').value)||0;if(quickType==='Simcard')total=(Number($('quickSimPrice').value)||0)*(Number($('quickSimQty').value)||0);if(quickType==='GCash'){const a=Number($('quickGcashAmount').value)||0;total=a+Math.round(a*.01*100)/100;}$('quickTotal').textContent='Total: '+peso(total);}
+['quickAmaxAmount','quickSimPrice','quickSimQty','quickGcashAmount'].forEach(id=>$(id).addEventListener('input',updateQuickTotal));
+$('quickCustomerSearch').addEventListener('input',()=>{clearTimeout(quickSearchTimer);const q=$('quickCustomerSearch').value.trim();$('quickCustomerResults').innerHTML='';quickCustomer=null;$('quickSelectedCustomer').classList.add('hidden');if(q.length<2){$('quickCustomerStatus').textContent='Mag-type ng kahit 2 characters.';return;}$('quickCustomerStatus').textContent='Searching...';quickSearchTimer=setTimeout(()=>callServer('searchCustomers',[q],list=>{list=Array.isArray(list)?list:[];$('quickCustomerStatus').textContent=list.length?list.length+' customer(s) found.':'Walang matching customer.';$('quickCustomerResults').innerHTML=list.map((c,i)=>`<div class="result"><div><strong>${esc(c.owner)}</strong><div class="meta">${esc(c.barangay)}<br>CP: ${esc(c.number)}</div></div><button type="button" onclick="selectQuickCustomer(${i})">SELECT</button></div>`).join('');window.quickFoundCustomers=list;},e=>{$('quickCustomerStatus').textContent=e.message||String(e);showToast('Hindi ma-search ang customer.','error');}),250);});
+function selectQuickCustomer(i){quickCustomer=window.quickFoundCustomers[i];$('quickSelectedCustomer').innerHTML='<strong>'+esc(quickCustomer.owner)+'</strong><br>'+esc(quickCustomer.barangay)+'<br>CP: '+esc(quickCustomer.number);$('quickSelectedCustomer').classList.remove('hidden');$('quickCustomerResults').innerHTML='';$('quickCustomerStatus').textContent='Customer selected.';}
+function saveQuickSale(){if(!quickCustomer){showToast('Pumili muna ng customer.','error');return;}$('paymentStatusTitle').textContent='Select Payment Status';openPaymentStatusModal(performSaveQuickSale);}
+function performSaveQuickSale(){
+  if(!quickCustomer)return;let request,amount=0,qty=1,brand='';const payment=chosenPaymentStatus;
+  if(quickType==='Amax'){amount=Number($('quickAmaxAmount').value);if(!validPositive(amount)){showToast('Maglagay ng valid na Amax amount.','error');return;}request=done=>callServer('saveTransaction',[quickCustomer,amount,payment],done,fail,true);}
+  else if(quickType==='GCash'){amount=Number($('quickGcashAmount').value);if(!validPositive(amount)){showToast('Maglagay ng valid na GCash amount.','error');return;}request=done=>callServer('saveGcashTransaction',[quickCustomer,amount,payment],done,fail,true);}
+  else{brand=$('quickSimBrand').value;amount=Number($('quickSimPrice').value);qty=Number($('quickSimQty').value);if(!validPositive(amount)||!Number.isInteger(qty)||qty<1||qty>100000){showToast('Ilagay ang valid na SIM price at quantity.','error');return;}request=done=>callServer('saveSimcardTransaction',[quickCustomer,brand,amount,qty,payment],done,fail,true);}
+  $('quickSaveBtn').disabled=true;request(res=>{const total=quickType==='Simcard'?amount*qty:(quickType==='GCash'?amount+Math.round(amount*.01*100)/100:amount);showToast('Successfully saved '+peso(total)+' '+(quickType==='Simcard'?brand+' SIM':quickType)+' transaction!');loadReport('day');loadHomeRecent();if(quickType==='Simcard')loadSimInventory();if(quickType==='Amax'){quickPendingSmsBody='LoadRT/'+String(res.number||quickCustomer.number).replace(/\D/g,'')+'/'+String(res.amount||amount);$('quickSmsPreview').textContent='To: '+SMS_RECIPIENT+'\n'+quickPendingSmsBody;$('quickSmsArea').classList.remove('hidden');$('quickSaveBtn').disabled=true;$('quickSaveBtn').textContent='TRANSACTION SAVED';}else{closeQuickAdd();$('quickSaveBtn').disabled=false;}});
+  function fail(e){$('quickSaveBtn').disabled=false;showToast(e.message||String(e),'error');}
+}
+function startPullRefresh(){if(activePage!=='home'||window.scrollY>0)return;touchStartY=0;}
+document.addEventListener('touchstart',e=>{if(activePage==='home'&&window.scrollY<=0)touchStartY=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',e=>{if(!touchStartY||activePage!=='home')return;const distance=e.changedTouches[0].clientY-touchStartY;touchStartY=0;if(distance>95&&window.scrollY<=0){$('refreshIndicator').textContent='↻ Refreshing transactions...';loadHomeRecent();loadReport('day');setTimeout(()=>{$('refreshIndicator').textContent='Updated';setTimeout(()=>{$('refreshIndicator').textContent='';},1200);},900);}}, {passive:true});
+
+function restoreTheme(){
+  let saved=null;try{saved=localStorage.getItem('salesPortalDarkMode');}catch(e){}
+  if(saved==='0'){document.body.classList.add('light');document.querySelectorAll('.theme-toggle').forEach(b=>b.textContent='🌙 Dark Mode');}else{document.body.classList.remove('light');document.querySelectorAll('.theme-toggle').forEach(b=>b.textContent='☀️ Light Mode');}
+}
+function renderReport(r){
+  $('periodLabel').textContent=(r.startDate===r.endDate?r.startDate:r.startDate+' to '+r.endDate);
+  const sums=r.summaries||{},a=sums.Amax||{count:0,amount:0},s=sums['Sim Card']||{count:0,amount:0},g=sums.GCash||{count:0,amount:0};
+  $('amaxCount').textContent=a.count+' transactions';$('amaxAmount').textContent=peso(a.amount);
+  $('simCount').textContent=s.count+' transactions';$('simAmount').textContent=peso(s.amount);
+  $('gcashCount').textContent=g.count+' transactions';$('gcashAmountReport').textContent=peso(g.amount);
+  $('breakdown').innerHTML=r.items.length?r.items.map(x=>`<div class="break-row"><div><strong>${esc(x.label)}</strong><div class="meta">${x.transactions} transaction(s) • Qty ${x.quantity}</div></div><strong>${peso(x.totalSales)}</strong></div>`).join(''):'No sales for this period.';
+  $('breakdownPeriod').textContent='Report period: '+(r.startDate===r.endDate?r.startDate:r.startDate+' to '+r.endDate);
+  currentReportTransactions=Array.isArray(r.transactions)?r.transactions:[];
+  renderTransactionHistory();
+  $('outstandingCount').textContent=(r.outstandingCount||0)+' transactions';
+  $('outstandingAmount').textContent=peso(r.outstandingAmount!=null?r.outstandingAmount:(r.transactions||[]).filter(t=>['Credit','Pending'].includes(t.paymentStatus)).reduce((sum,t)=>sum+Number(t.amount||0),0));
+  if(currentPeriod==='day'||currentPeriod==='date'){
+    $('todaySales').textContent=peso(r.totalAmount||0);
+    $('todayTransactions').textContent=String(r.totalCount||0);
+  }
+}
+function renderTransactionHistory(){
+  const q=String($('transactionHistorySearch')?.value||'').trim().toLowerCase();
+  const filtered=currentReportTransactions.map((t,i)=>({t,i})).filter(({t})=>{
+    const status=String(t.paymentStatus||'Cash');
+    const statusMatch=transactionHistoryFilter==='All'||status===transactionHistoryFilter;
+    const searchText=[t.owner,t.number,t.barangay,t.type,t.item,t.paymentStatus,t.date].join(' ').toLowerCase();
+    return statusMatch&&(!q||searchText.includes(q));
+  });
+  $('transactions').innerHTML=filtered.length?filtered.map(({t,i})=>{
+    const p=String(t.paymentStatus||'Cash');
+    const pendingSync=t.pendingSync?' <span class="status-badge status-gcash">Pending Sync</span>':'';
+    const cls=p==='Pending'?'status-pending':p==='Credit'?'status-credit':p==='Gcash Payment'?'status-gcash':'status-completed';
+    return `<div class="tx"><div><div class="tx-title"><button class="customer-link" type="button" onclick="openCustomerDetails(${i})">${esc(t.owner)}</button> <span class="pill">${esc(t.type)}${t.item&&t.item!==t.type?' • '+esc(t.item):''}</span><span class="status-badge ${cls}">${esc(p)}</span>${pendingSync}</div><div class="meta">${esc(t.date)}<br>${esc(t.barangay)} • ${esc(t.number)}<br>${peso(t.unitPrice)} × ${t.quantity}</div></div><div style="text-align:right"><div class="amount">${peso(t.amount)}</div><select class="status-select" aria-label="Update payment status for ${esc(t.owner)}" onchange="updateTransactionStatus('${esc(t.id)}',this.value)"><option value="" selected disabled>Change status</option><option value="Cash">Cash</option><option value="Credit">Credit</option><option value="Pending">Pending</option><option value="Paid">Paid</option><option value="Gcash Payment">Gcash Payment</option><option value="Loaded">Loaded</option></select></div></div>`;
+  }).join(''):'No transactions match this search or status filter.';
+}
+$('transactionHistorySearch').addEventListener('input',renderTransactionHistory);
+$('transactionStatusFilter').addEventListener('change',e=>{transactionHistoryFilter=e.target.value;renderTransactionHistory();});
+
+function openCustomerDetails(index){
+  const tx=currentReportTransactions[index];
+  if(!tx)return;
+  const dateKey=String(tx.reportDateKey||tx.date||'').slice(0,10);
+  activeCustomerDetails={number:tx.number,owner:tx.owner,dateKey};
+  $('customerDetailsTitle').textContent=tx.owner+' — '+dateKey;
+  $('customerDetailsSummary').textContent='Customer: '+tx.owner+' • '+tx.number+' • Transaction date: '+dateKey;
+  $('customerDetailsContent').textContent='Loading all transactions for this customer on this date...';
+  $('customerDetailsBackdrop').classList.remove('hidden');
+  callServer('getCustomerTransactionHistory',[tx.number,dateKey],renderCustomerDetails,e=>{$('customerDetailsContent').textContent=e.message||String(e);});
+}
+function closeCustomerDetails(){ $('customerDetailsBackdrop').classList.add('hidden'); activeCustomerDetails=null; }
+function renderCustomerDetails(rows){
+  const list=Array.isArray(rows)?rows:[];
+  if(!list.length){$('customerDetailsContent').innerHTML='<p class="hint">No transactions found for this customer on the selected date.</p>';return;}
+  $('customerDetailsContent').innerHTML=list.map(t=>{
+    const status=String(t.paymentStatus||'Cash');
+    const cls=status==='Pending'?'status-pending':status==='Credit'?'status-credit':status==='Gcash Payment'?'status-gcash':'status-completed';
+    return `<div class="customer-detail-row"><div><strong>${esc(t.type)}${t.item&&t.item!==t.type?' • '+esc(t.item):''}</strong><span class="status-badge ${cls}">${esc(status)}</span><div class="customer-detail-grid"><span>Date &amp; Time</span><strong>${esc(t.date)}</strong><span>Barangay</span><strong>${esc(t.barangay)}</strong><span>Customer Number</span><strong>${esc(t.number)}</strong><span>Unit Price</span><strong>${peso(t.unitPrice)}</strong><span>Quantity</span><strong>${esc(t.quantity)}</strong><span>Total Amount</span><strong>${peso(t.amount)}</strong></div></div><div><label class="hint" for="detail-status-${esc(t.id)}">Payment Status</label><select id="detail-status-${esc(t.id)}" class="status-select" onchange="updateTransactionStatus('${esc(t.id)}',this.value)"><option value="" selected disabled>Change status</option><option value="Cash">Cash</option><option value="Credit">Credit</option><option value="Pending">Pending</option><option value="Paid">Paid</option><option value="Gcash Payment">Gcash Payment</option><option value="Loaded">Loaded</option></select></div></div>`;
+  }).join('');
+}
+function updateTransactionStatus(id,status){
+  if(!['Cash','Credit','Pending','Paid','Gcash Payment','Loaded'].includes(status))return;
+  callServer('updateTransactionPaymentStatus',[id,status],()=>{
+    showToast((navigator.onLine?'Payment status updated to ':'Payment status saved offline; waiting to sync: ')+status+'.');
+    const customer=activeCustomerDetails;
+    if(customer){
+      callServer('getCustomerTransactionHistory',[customer.number,customer.dateKey],renderCustomerDetails,e=>showToast(e.message||String(e),'error'));
+    }
+    if(currentPeriod==='date'&&selectedReportDate)loadSelectedDateReport();else loadReport(currentPeriod);
+    loadHomeRecent();
+  },e=>showToast(e.message||String(e),'error'),true);
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeQuickAdd();closePaymentStatusModal();closeCustomerDetails();}});
+setInterval(()=>{
+  if(document.hidden)return;
+  loadHomeRecent();
+  loadReport(activePage==='reports'?currentPeriod:'day');
+  if(activePage==='sim')loadSimInventory();
+},15*60*1000);
+restoreTheme();if($('reportDate')){$('reportDate').value=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Manila',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}initializeOffline();
+</script>
+</body>
+</html>
